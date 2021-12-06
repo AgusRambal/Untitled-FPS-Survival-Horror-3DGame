@@ -133,7 +133,6 @@ GameObject:
   m_Component:
   - component: {fileID: 37847839}
   - component: {fileID: 37847838}
-  - component: {fileID: 37847837}
   - component: {fileID: 37847836}
   - component: {fileID: 37847841}
   - component: {fileID: 37847842}
@@ -158,48 +157,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &37847837
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 37847835}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 8ab62b5c724679543a2e96c321ce72f3, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &37847838
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -264,13 +221,18 @@ MonoBehaviour:
     WalkingForwardSpeed: 5
     WalikingStrafSpeed: 5
     WalkingStrafeSpeed: 5
-    JumpingHeight: 10
-    JumpingFalloff: 0.1
+    JumpingHeight: 6
+    JumpingFalloff: 1
   viewClampYMin: -70
   viewClampYMax: 80
-  gravityAmount: 0.1
+  gravityAmount: 0.15
   gravityMin: -3
   jumpingForce: {x: 0, y: 0, z: 0}
+  playerStance: 0
+  playerStartsSmothing: 0.3
+  cameraStandingHeight: 0.695
+  cameraCrouchingHeight: 0.121
+  cameraProneingHeight: -0.618
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,6 +7,13 @@ public static class Scr_Models
 {
     #region - Player -
 
+    public enum PlayerStance 
+    { 
+        Stand, 
+        Crouch,
+        Prone
+    }
+
     [Serializable]
     public class PlayerSettingsModel
     {

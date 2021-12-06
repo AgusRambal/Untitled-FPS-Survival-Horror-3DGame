@@ -28,6 +28,16 @@ public class Scr_CharacterController : MonoBehaviour
     public Vector3 jumpingForce;
     private Vector3 jumpingForceVelocity;
 
+    [Header("Stance")]
+    public Scr_Models.PlayerStance playerStance;
+    public float playerStartsSmothing;
+    public float cameraStandingHeight;
+    public float cameraCrouchingHeight;
+    public float cameraProneingHeight;
+
+    private float cameraHeight;
+    private float cameraHeightVelocity;
+
     private void Awake()
     {
         defaultInput = new DefaultInput();
@@ -43,6 +53,8 @@ public class Scr_CharacterController : MonoBehaviour
         newCharacterRotation = transform.localRotation.eulerAngles;
 
         characterController = GetComponent<CharacterController>();
+
+        cameraHeight = cameraHolder.localPosition.y;
     }
 
     private void Update() 
@@ -50,6 +62,7 @@ public class Scr_CharacterController : MonoBehaviour
         CalculateView();
         CalculateMovement();
         CalculateJump();
+        CalculateCameraHeight();
     }
 
     private void CalculateView()
@@ -71,19 +84,14 @@ public class Scr_CharacterController : MonoBehaviour
         var newMovementSpeed = new Vector3(horizontalSpeed, 0, verticalSpeed);
         newMovementSpeed = transform.TransformDirection(newMovementSpeed);
 
-        if (playerGravity > gravityMin && jumpingForce.y < 0.1f)
+        if (playerGravity > gravityMin)
         {
             playerGravity -= gravityAmount * Time.deltaTime;
         }
 
-        if (playerGravity < -1 && characterController.isGrounded) 
+        if (playerGravity < -0.1f && characterController.isGrounded) 
         {
-            playerGravity = -1;
-        }
-
-        if (jumpingForce.y > 0.1f)
-        {
-            playerGravity = 0;
+            playerGravity = -0.1f;
         }
 
         newMovementSpeed.y += playerGravity;
@@ -97,6 +105,23 @@ public class Scr_CharacterController : MonoBehaviour
         jumpingForce = Vector3.SmoothDamp(jumpingForce, Vector3.zero, ref jumpingForceVelocity, playerSettings.JumpingFalloff);
     }
 
+    private void CalculateCameraHeight()
+    {
+        var stanceHeight = cameraStandingHeight;
+
+        if (playerStance == Scr_Models.PlayerStance.Crouch)
+        {
+            stanceHeight = cameraCrouchingHeight;
+        }
+        else if (playerStance == Scr_Models.PlayerStance.Prone) 
+        {
+            stanceHeight = cameraProneingHeight;
+        }
+
+        cameraHeight = Mathf.SmoothDamp(cameraHolder.localPosition.y, stanceHeight, ref cameraHeightVelocity, playerStartsSmothing);
+        cameraHolder.localPosition = new Vector3(cameraHolder.localPosition.x, cameraHeight, cameraHolder.localPosition.z);
+    }
+
     private void Jump()
     {
         if (!characterController.isGrounded) 
@@ -105,6 +130,6 @@ public class Scr_CharacterController : MonoBehaviour
         }
 
         jumpingForce = Vector3.up * playerSettings.JumpingHeight;
-
+        playerGravity = 0;
     }
 }
