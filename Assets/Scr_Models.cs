@@ -14,8 +14,13 @@ public static class Scr_Models
         public float ViewXSensitivity;
         public float ViewYSensitivity;
 
-        public bool ViexXInverted;
-        public bool ViexYInverted;
+        public bool ViewXInverted;
+        public bool ViewYInverted;
+
+        [Header("Movement")]
+        public float WalkingForwardSpeed;
+        public float WalikingStrafSpeed;
+        public float WalkingStrafeSpeed;
     }
 
     #endregion
