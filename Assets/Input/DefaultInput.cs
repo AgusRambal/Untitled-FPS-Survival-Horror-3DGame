@@ -33,6 +33,14 @@ public class @DefaultInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""6320d171-4248-43b4-999f-294cac4b0051"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -101,6 +109,17 @@ public class @DefaultInput : IInputActionCollection, IDisposable
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""805199d7-6dbc-4e6d-8283-b9206016cda8"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -111,6 +130,7 @@ public class @DefaultInput : IInputActionCollection, IDisposable
         m_Character = asset.FindActionMap("Character", throwIfNotFound: true);
         m_Character_Movement = m_Character.FindAction("Movement", throwIfNotFound: true);
         m_Character_View = m_Character.FindAction("View", throwIfNotFound: true);
+        m_Character_Jump = m_Character.FindAction("Jump", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -162,12 +182,14 @@ public class @DefaultInput : IInputActionCollection, IDisposable
     private ICharacterActions m_CharacterActionsCallbackInterface;
     private readonly InputAction m_Character_Movement;
     private readonly InputAction m_Character_View;
+    private readonly InputAction m_Character_Jump;
     public struct CharacterActions
     {
         private @DefaultInput m_Wrapper;
         public CharacterActions(@DefaultInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_Character_Movement;
         public InputAction @View => m_Wrapper.m_Character_View;
+        public InputAction @Jump => m_Wrapper.m_Character_Jump;
         public InputActionMap Get() { return m_Wrapper.m_Character; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -183,6 +205,9 @@ public class @DefaultInput : IInputActionCollection, IDisposable
                 @View.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnView;
                 @View.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnView;
                 @View.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnView;
+                @Jump.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnJump;
             }
             m_Wrapper.m_CharacterActionsCallbackInterface = instance;
             if (instance != null)
@@ -193,6 +218,9 @@ public class @DefaultInput : IInputActionCollection, IDisposable
                 @View.started += instance.OnView;
                 @View.performed += instance.OnView;
                 @View.canceled += instance.OnView;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
             }
         }
     }
@@ -201,5 +229,6 @@ public class @DefaultInput : IInputActionCollection, IDisposable
     {
         void OnMovement(InputAction.CallbackContext context);
         void OnView(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
     }
 }
