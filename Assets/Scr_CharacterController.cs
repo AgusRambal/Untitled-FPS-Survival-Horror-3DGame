@@ -43,6 +43,11 @@ public class Scr_CharacterController : MonoBehaviour
     private Vector3 stanceCapsuleCenterVelocity;
     private float stanceCapsuleHeightVelocity;
 
+    private bool isSprinting;
+
+    private Vector3 newMovementSpeed;
+    private Vector3 newMoevemtSpeedVelocity;
+
     private void Awake()
     {
         defaultInput = new DefaultInput();
@@ -55,6 +60,9 @@ public class Scr_CharacterController : MonoBehaviour
         defaultInput.Character.Crouch.performed += e => Crouch();
         defaultInput.Character.Prone.performed += e => Prone();
 
+        defaultInput.Character.Sprint.performed += e => ToggleSprint();
+        defaultInput.Character.SprintReleased.performed += e => StopSprint();
+
         defaultInput.Enable();
 
         newCameraRotation = cameraHolder.localRotation.eulerAngles;
@@ -65,7 +73,7 @@ public class Scr_CharacterController : MonoBehaviour
         cameraHeight = cameraHolder.localPosition.y;
     }
 
-    private void Update() 
+    private void Update()
     {
         CalculateView();
         CalculateMovement();
@@ -78,34 +86,65 @@ public class Scr_CharacterController : MonoBehaviour
         newCharacterRotation.y += playerSettings.ViewXSensitivity * (playerSettings.ViewXInverted ? -input_View.x : input_View.x) * Time.deltaTime;
         transform.localRotation = Quaternion.Euler(newCharacterRotation);
 
-        newCameraRotation.x += playerSettings.ViewYSensitivity * (playerSettings.ViewYInverted? input_View.y : -input_View.y) * Time.deltaTime;
-        newCameraRotation.x = Mathf.Clamp(newCameraRotation.x, viewClampYMin, viewClampYMax); 
+        newCameraRotation.x += playerSettings.ViewYSensitivity * (playerSettings.ViewYInverted ? input_View.y : -input_View.y) * Time.deltaTime;
+        newCameraRotation.x = Mathf.Clamp(newCameraRotation.x, viewClampYMin, viewClampYMax);
 
         cameraHolder.localRotation = Quaternion.Euler(newCameraRotation);
     }
 
     private void CalculateMovement()
     {
-        var verticalSpeed = playerSettings.WalkingForwardSpeed * input_Movement.y * Time.deltaTime;
-        var horizontalSpeed= playerSettings.WalkingStrafeSpeed * input_Movement.x * Time.deltaTime;
+        if (input_Movement.y <= 0.2f)
+        {
+            isSprinting = false;
+        }
 
-        var newMovementSpeed = new Vector3(horizontalSpeed, 0, verticalSpeed);
-        newMovementSpeed = transform.TransformDirection(newMovementSpeed);
+        var verticalSpeed = playerSettings.WalkingForwardSpeed;
+        var horizontalSpeed = playerSettings.WalkingStrafeSpeed;
+
+        if (isSprinting)
+        {
+            verticalSpeed = playerSettings.runningForwardSpeed;
+            horizontalSpeed = playerSettings.runningStrafeSpeed;
+        }
+
+        if (!characterController.isGrounded)
+        {
+            playerSettings.SpeedEffector = playerSettings.FallingSpeedEffector;
+        }
+        else if (playerStance == Scr_Models.PlayerStance.Crouch)
+        {
+            playerSettings.SpeedEffector = playerSettings.CrouchSpeedEffector;
+        }
+        else if (playerStance == Scr_Models.PlayerStance.Prone)
+        {
+            playerSettings.SpeedEffector = playerSettings.ProneSpeedEfector;
+        }
+        else
+        {
+            playerSettings.SpeedEffector = 1;
+        }
+
+        verticalSpeed *= playerSettings.SpeedEffector;
+        horizontalSpeed *= playerSettings.SpeedEffector;
+
+        newMovementSpeed = Vector3.SmoothDamp(newMovementSpeed, new Vector3(horizontalSpeed * input_Movement.x * Time.deltaTime, 0, verticalSpeed * input_Movement.y * Time.deltaTime), ref newMoevemtSpeedVelocity, characterController.isGrounded ? playerSettings.MovementSmoothing : playerSettings.FallingSmoothing);
+        var MovementSpeed = transform.TransformDirection(newMovementSpeed);
 
         if (playerGravity > gravityMin)
         {
             playerGravity -= gravityAmount * Time.deltaTime;
         }
 
-        if (playerGravity < -0.1f && characterController.isGrounded) 
+        if (playerGravity < -0.1f && characterController.isGrounded)
         {
             playerGravity = -0.1f;
         }
 
-        newMovementSpeed.y += playerGravity;
-        newMovementSpeed += jumpingForce * Time.deltaTime;
+        MovementSpeed.y += playerGravity;
+        MovementSpeed += jumpingForce * Time.deltaTime;
 
-        characterController.Move(newMovementSpeed);
+        characterController.Move(MovementSpeed);
     }
 
     private void CalculateJump()
@@ -121,7 +160,7 @@ public class Scr_CharacterController : MonoBehaviour
         {
             currentStance = playerCrouchStance;
         }
-        else if (playerStance == Scr_Models.PlayerStance.Prone) 
+        else if (playerStance == Scr_Models.PlayerStance.Prone)
         {
             currentStance = playerProneStance;
         }
@@ -135,9 +174,20 @@ public class Scr_CharacterController : MonoBehaviour
 
     private void Jump()
     {
-        if (!characterController.isGrounded) 
+        if (!characterController.isGrounded || playerStance == Scr_Models.PlayerStance.Prone)
         {
-            return;        
+            return;
+        }
+
+        if (playerStance == Scr_Models.PlayerStance.Crouch)
+        {
+            if (StanceCheck(playerStandStance.StanceCollider.height))
+            {
+                return;
+            }
+
+            playerStance = Scr_Models.PlayerStance.Stand;
+            return;
         }
 
         jumpingForce = Vector3.up * playerSettings.JumpingHeight;
@@ -152,7 +202,6 @@ public class Scr_CharacterController : MonoBehaviour
             {
                 return;
             }
-
 
             playerStance = Scr_Models.PlayerStance.Stand;
             return;
@@ -177,5 +226,24 @@ public class Scr_CharacterController : MonoBehaviour
         var end = new Vector3(feetTransform.position.x, feetTransform.position.y - characterController.radius - stanceCheckErrorMargin + stanceCheckHeight, feetTransform.position.z);
 
         return Physics.CheckCapsule(start, end, characterController.radius, playerMask);
+    }
+
+    private void ToggleSprint()
+    {
+        if (input_Movement.y <= 0.2f)
+        {
+            isSprinting = false;
+            return;
+        }
+
+        isSprinting = !isSprinting;
+    }
+
+    private void StopSprint()
+    {
+        if (playerSettings.sprintingHold) 
+        {
+             isSprinting = false;
+        } 
     }
 }

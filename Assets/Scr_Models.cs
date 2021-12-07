@@ -24,7 +24,15 @@ public static class Scr_Models
         public bool ViewXInverted;
         public bool ViewYInverted;
 
-        [Header("Movement")]
+        [Header("Movement settings")]
+        public bool sprintingHold;
+        public float MovementSmoothing;
+
+        [Header("Movement - Running")]
+        public float runningForwardSpeed;
+        public float runningStrafeSpeed;
+
+        [Header("Movement - Walking")]
         public float WalkingForwardSpeed;
         public float WalikingStrafSpeed;
         public float WalkingStrafeSpeed;
@@ -32,6 +40,13 @@ public static class Scr_Models
         [Header("Jump")]
         public float JumpingHeight;
         public float JumpingFalloff;
+        public float FallingSmoothing;
+
+        [Header("Speed Effectors")]
+        public float SpeedEffector = 1;
+        public float CrouchSpeedEffector;
+        public float ProneSpeedEfector;
+        public float FallingSpeedEffector;
     }
 
     [Serializable]
