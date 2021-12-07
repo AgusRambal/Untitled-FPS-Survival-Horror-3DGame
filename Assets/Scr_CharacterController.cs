@@ -34,9 +34,18 @@ public class Scr_CharacterController : MonoBehaviour
     public float cameraStandingHeight;
     public float cameraCrouchingHeight;
     public float cameraProneingHeight;
+    public Scr_Models.CharacterStance playerStandStance;
+    public Scr_Models.CharacterStance playerCrouchStance;
+    public Scr_Models.CharacterStance playerProneStance;
 
     private float cameraHeight;
     private float cameraHeightVelocity;
+
+    private Vector3 stanceCapsuleCenter;
+    private Vector3 stanceCapsuleCenterVelocity;
+
+    private float stanceCapsuleHeight;
+    private float stanceCapsuleHeightVelocity;
 
     private void Awake()
     {
@@ -62,7 +71,7 @@ public class Scr_CharacterController : MonoBehaviour
         CalculateView();
         CalculateMovement();
         CalculateJump();
-        CalculateCameraHeight();
+        CalculateStance();
     }
 
     private void CalculateView()
@@ -105,21 +114,24 @@ public class Scr_CharacterController : MonoBehaviour
         jumpingForce = Vector3.SmoothDamp(jumpingForce, Vector3.zero, ref jumpingForceVelocity, playerSettings.JumpingFalloff);
     }
 
-    private void CalculateCameraHeight()
+    private void CalculateStance()
     {
-        var stanceHeight = cameraStandingHeight;
+        var currentStance = playerStandStance;
 
         if (playerStance == Scr_Models.PlayerStance.Crouch)
         {
-            stanceHeight = cameraCrouchingHeight;
+            currentStance = playerCrouchStance;
         }
         else if (playerStance == Scr_Models.PlayerStance.Prone) 
         {
-            stanceHeight = cameraProneingHeight;
+            currentStance = playerProneStance;
         }
 
-        cameraHeight = Mathf.SmoothDamp(cameraHolder.localPosition.y, stanceHeight, ref cameraHeightVelocity, playerStartsSmothing);
+        cameraHeight = Mathf.SmoothDamp(cameraHolder.localPosition.y, currentStance.CameraHeight, ref cameraHeightVelocity, playerStartsSmothing);
         cameraHolder.localPosition = new Vector3(cameraHolder.localPosition.x, cameraHeight, cameraHolder.localPosition.z);
+
+        characterController.height = Mathf.SmoothDamp(characterController.height, currentStance.StanceCollider.height, ref stanceCapsuleHeightVelocity, playerStartsSmothing);
+        //aca seguir con el .center. Lo dejo en el video 6 minuto 14:07!!!!!!!!!!
     }
 
     private void Jump()
