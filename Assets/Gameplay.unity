@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 37847837}
   - component: {fileID: 37847841}
   - component: {fileID: 37847842}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -193,6 +193,7 @@ Transform:
   m_LocalScale: {x: 1.5, y: 2, z: 1.5}
   m_Children:
   - {fileID: 1961721405}
+  - {fileID: 394772090}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -222,7 +223,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 2
   m_Height: 2
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -240,9 +241,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bc4e04bbf7f6be418ffbe915b1b2e78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  input_Movement: {x: 0, y: 0}
-  input_View: {x: 0, y: 0}
   cameraHolder: {fileID: 1961721405}
+  feetTransform: {fileID: 394772090}
   playerSettings:
     ViewXSensitivity: 10
     ViewYSensitivity: 10
@@ -255,14 +255,14 @@ MonoBehaviour:
     JumpingFalloff: 1
   viewClampYMin: -70
   viewClampYMax: 80
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 55
   gravityAmount: 0.15
   gravityMin: -3
   jumpingForce: {x: 0, y: 0, z: 0}
   playerStance: 0
-  playerStartsSmothing: 0.3
-  cameraStandingHeight: 0.695
-  cameraCrouchingHeight: 0.121
-  cameraProneingHeight: -0.618
+  playerStartsSmothing: 0.2
   playerStandStance:
     CameraHeight: 0.695
     StanceCollider: {fileID: 37847836}
@@ -270,8 +270,38 @@ MonoBehaviour:
     CameraHeight: 0.121
     StanceCollider: {fileID: 37847840}
   playerProneStance:
-    CameraHeight: -0.618
+    CameraHeight: -0.32
     StanceCollider: {fileID: 37847837}
+--- !u!1 &394772089
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 394772090}
+  m_Layer: 6
+  m_Name: FeetTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &394772090
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 394772089}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 37847839}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -376,7 +406,7 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -726,7 +756,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1961721405}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CameraHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}

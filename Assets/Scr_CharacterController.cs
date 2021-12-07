@@ -6,19 +6,21 @@ public class Scr_CharacterController : MonoBehaviour
 {
     private CharacterController characterController;
     private DefaultInput defaultInput;
-    public Vector2 input_Movement;
-    public Vector2 input_View;
+    private Vector2 input_Movement;
+    private Vector2 input_View;
 
     private Vector3 newCameraRotation;
     private Vector3 newCharacterRotation;
 
     [Header("References")]
     public Transform cameraHolder;
+    public Transform feetTransform;
 
     [Header("Settings")]
     public Scr_Models.PlayerSettingsModel playerSettings;
     public float viewClampYMin;
     public float viewClampYMax;
+    public LayerMask playerMask;
 
     [Header("Gravity")]
     public float gravityAmount;
@@ -31,20 +33,14 @@ public class Scr_CharacterController : MonoBehaviour
     [Header("Stance")]
     public Scr_Models.PlayerStance playerStance;
     public float playerStartsSmothing;
-    public float cameraStandingHeight;
-    public float cameraCrouchingHeight;
-    public float cameraProneingHeight;
     public Scr_Models.CharacterStance playerStandStance;
     public Scr_Models.CharacterStance playerCrouchStance;
     public Scr_Models.CharacterStance playerProneStance;
-
+    private float stanceCheckErrorMargin = 0.05f;
     private float cameraHeight;
     private float cameraHeightVelocity;
 
-    private Vector3 stanceCapsuleCenter;
     private Vector3 stanceCapsuleCenterVelocity;
-
-    private float stanceCapsuleHeight;
     private float stanceCapsuleHeightVelocity;
 
     private void Awake()
@@ -55,6 +51,9 @@ public class Scr_CharacterController : MonoBehaviour
         defaultInput.Character.Movement.performed += e => input_Movement = e.ReadValue<Vector2>();
         defaultInput.Character.View.performed += e => input_View = e.ReadValue<Vector2>();
         defaultInput.Character.Jump.performed += e => Jump();
+
+        defaultInput.Character.Crouch.performed += e => Crouch();
+        defaultInput.Character.Prone.performed += e => Prone();
 
         defaultInput.Enable();
 
@@ -131,7 +130,7 @@ public class Scr_CharacterController : MonoBehaviour
         cameraHolder.localPosition = new Vector3(cameraHolder.localPosition.x, cameraHeight, cameraHolder.localPosition.z);
 
         characterController.height = Mathf.SmoothDamp(characterController.height, currentStance.StanceCollider.height, ref stanceCapsuleHeightVelocity, playerStartsSmothing);
-        //aca seguir con el .center. Lo dejo en el video 6 minuto 14:07!!!!!!!!!!
+        characterController.center = Vector3.SmoothDamp(characterController.center, currentStance.StanceCollider.center, ref stanceCapsuleCenterVelocity, playerStartsSmothing);
     }
 
     private void Jump()
@@ -143,5 +142,40 @@ public class Scr_CharacterController : MonoBehaviour
 
         jumpingForce = Vector3.up * playerSettings.JumpingHeight;
         playerGravity = 0;
+    }
+
+    private void Crouch()
+    {
+        if (playerStance == Scr_Models.PlayerStance.Crouch)
+        {
+            if (StanceCheck(playerStandStance.StanceCollider.height))
+            {
+                return;
+            }
+
+
+            playerStance = Scr_Models.PlayerStance.Stand;
+            return;
+        }
+
+        if (StanceCheck(playerCrouchStance.StanceCollider.height))
+        {
+            return;
+        }
+
+        playerStance = Scr_Models.PlayerStance.Crouch;
+    }
+
+    private void Prone()
+    {
+        playerStance = Scr_Models.PlayerStance.Prone;
+    }
+
+    private bool StanceCheck(float stanceCheckHeight)
+    {
+        var start = new Vector3(feetTransform.position.x, feetTransform.position.y + characterController.radius + stanceCheckErrorMargin, feetTransform.position.z);
+        var end = new Vector3(feetTransform.position.x, feetTransform.position.y - characterController.radius - stanceCheckErrorMargin + stanceCheckHeight, feetTransform.position.z);
+
+        return Physics.CheckCapsule(start, end, characterController.radius, playerMask);
     }
 }
