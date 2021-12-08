@@ -7,6 +7,10 @@ public class scr_WeaponController : MonoBehaviour
 {
     private Scr_CharacterController characterController;
 
+    [Header("References")]
+    public Animator weaponAnimator;
+
+
     [Header("Settings")]
     public WeaponsSettingsModel settings;
 
@@ -23,6 +27,17 @@ public class scr_WeaponController : MonoBehaviour
 
     Vector3 targetWeaponMovementRotation;
     Vector3 targetWeaponMovementRotationVelocity;
+
+    [Header("Weapon Breathing")]
+    public Transform weaponSwayObject;
+
+    public float swayAmountA = 1;
+    public float swayAmountB = 2;
+    public float swayScale = 600;
+    public float swayLerpSpeed = 14;
+
+    public float swayTime;
+    public Vector3 swayPosition;
 
     private void Start()
     {
@@ -42,6 +57,16 @@ public class scr_WeaponController : MonoBehaviour
             return;
         }
 
+        CalculateWeaponRotation();
+        SetWeaponAnimations();
+        CalculateWeaponSway();
+
+    }
+
+    private void CalculateWeaponRotation()
+    {
+        weaponAnimator.speed = characterController.weaponAnimationSpeed;
+
         targetWeaponRotation.y += settings.SwayAmount * (settings.SwayXInverted ? -characterController.input_View.x : characterController.input_View.x) * Time.deltaTime;
         targetWeaponRotation.x += settings.SwayAmount * (settings.SwayYInverted ? characterController.input_View.y : -characterController.input_View.y) * Time.deltaTime;
 
@@ -59,7 +84,31 @@ public class scr_WeaponController : MonoBehaviour
         newWeaponMovementRotation = Vector3.SmoothDamp(newWeaponMovementRotation, targetWeaponMovementRotation, ref newWeaponMovementRotationVelocity, settings.MovementSwaySmoothing);
 
         transform.localRotation = Quaternion.Euler(newWeaponRotation + newWeaponMovementRotation);
+    }
 
+    private void SetWeaponAnimations()
+    {
+        weaponAnimator.SetBool("IsSprinting", characterController.isSprinting);
+    }
+
+    private void CalculateWeaponSway()
+    {
+        var targetPosition = LissajousCurve(swayTime, swayAmountA, swayAmountB) / swayScale;
+
+        swayPosition = Vector3.Lerp(swayPosition, targetPosition, Time.smoothDeltaTime * swayLerpSpeed);
+        swayTime += Time.deltaTime;
+
+        if (swayTime > 6.3f) 
+        {
+            swayTime = 0;
+        }
+
+        weaponSwayObject.localPosition = swayPosition;
+    }
+
+    private Vector3 LissajousCurve(float Time, float A, float B)
+    {
+        return new Vector3(Mathf.Sin(Time), A * Mathf.Sin(B * Time + Mathf.PI));
     }
 
 }

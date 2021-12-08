@@ -45,13 +45,16 @@ public class Scr_CharacterController : MonoBehaviour
     private Vector3 stanceCapsuleCenterVelocity;
     private float stanceCapsuleHeightVelocity;
 
-    private bool isSprinting;
+    [HideInInspector]
+    public bool isSprinting;
 
     private Vector3 newMovementSpeed;
     private Vector3 newMoevemtSpeedVelocity;
 
     [Header("Weapon")]
     public scr_WeaponController currentWeapon;
+
+    public float weaponAnimationSpeed;
 
     private void Awake()
     {
@@ -121,18 +124,28 @@ public class Scr_CharacterController : MonoBehaviour
         if (!characterController.isGrounded)
         {
             playerSettings.SpeedEffector = playerSettings.FallingSpeedEffector;
+
         }
         else if (playerStance == Scr_Models.PlayerStance.Crouch)
         {
             playerSettings.SpeedEffector = playerSettings.CrouchSpeedEffector;
+
         }
         else if (playerStance == Scr_Models.PlayerStance.Prone)
         {
             playerSettings.SpeedEffector = playerSettings.ProneSpeedEfector;
+
         }
         else
         {
             playerSettings.SpeedEffector = 1;
+        }
+
+        weaponAnimationSpeed = characterController.velocity.magnitude / (playerSettings.WalkingForwardSpeed * playerSettings.SpeedEffector);
+
+        if (weaponAnimationSpeed > 1)
+        {
+            weaponAnimationSpeed = 1;
         }
 
         verticalSpeed *= playerSettings.SpeedEffector;
