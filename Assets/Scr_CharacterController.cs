@@ -53,8 +53,10 @@ public class Scr_CharacterController : MonoBehaviour
 
     [Header("Weapon")]
     public scr_WeaponController currentWeapon;
-
     public float weaponAnimationSpeed;
+
+    [Header("Aimin In")]
+    public bool isAimingIn;
 
     private void Awake()
     {
@@ -70,6 +72,9 @@ public class Scr_CharacterController : MonoBehaviour
 
         defaultInput.Character.Sprint.performed += e => ToggleSprint();
         defaultInput.Character.SprintReleased.performed += e => StopSprint();
+
+        defaultInput.Weapon.Fire2Pressed.performed += e => AimingInPressed();
+        defaultInput.Weapon.Fire2Released.performed += e => AimingInReleased();
 
         defaultInput.Enable();
 
@@ -91,6 +96,7 @@ public class Scr_CharacterController : MonoBehaviour
         CalculateView();
         CalculateMovement();
         CalculateJump();
+        CalculateAimingIn();
         CalculateStance();
     }
 
@@ -268,5 +274,26 @@ public class Scr_CharacterController : MonoBehaviour
         {
              isSprinting = false;
         } 
+    }
+
+    private void AimingInPressed()
+    {
+        isAimingIn = true;
+    }
+
+    private void AimingInReleased()
+    {
+        isAimingIn = false;
+    }
+
+    private void CalculateAimingIn()
+    {
+        if (!currentWeapon)
+        {
+            return;
+        }
+
+        currentWeapon.isAimingIn = isAimingIn;
+
     }
 }

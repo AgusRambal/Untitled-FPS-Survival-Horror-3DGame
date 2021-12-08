@@ -39,6 +39,17 @@ public class scr_WeaponController : MonoBehaviour
     public float swayTime;
     public Vector3 swayPosition;
 
+    [HideInInspector]
+    public bool isAimingIn;
+
+    [Header("Sights")]
+    public Transform sightTarget;
+    public float sightOffset;
+    public float aimingInTime;
+    private Vector3 weaponsSwayPosition;
+    private Vector3 weaponsSwayPositionVelocity;
+
+
     private void Start()
     {
         newWeaponRotation = transform.localRotation.eulerAngles;
@@ -60,7 +71,22 @@ public class scr_WeaponController : MonoBehaviour
         CalculateWeaponRotation();
         SetWeaponAnimations();
         CalculateWeaponSway();
+        CalculateAimingIn();
 
+    }
+
+    private void CalculateAimingIn()
+    {
+        var targetPosition = transform.position;
+
+        if (isAimingIn)
+        {
+            targetPosition = characterController.cameraHolder.transform.position + (weaponSwayObject.transform.position - sightTarget.position) + (characterController.cameraHolder.transform.forward * sightOffset);
+        }
+
+        weaponsSwayPosition = weaponSwayObject.transform.position;
+        weaponsSwayPosition = Vector3.SmoothDamp(weaponsSwayPosition, targetPosition, ref weaponsSwayPositionVelocity, aimingInTime);
+        weaponSwayObject.transform.position = weaponsSwayPosition;
     }
 
     private void CalculateWeaponRotation()
@@ -103,7 +129,7 @@ public class scr_WeaponController : MonoBehaviour
             swayTime = 0;
         }
 
-        weaponSwayObject.localPosition = swayPosition;
+        //weaponSwayObject.localPosition = swayPosition;
     }
 
     private Vector3 LissajousCurve(float Time, float A, float B)
