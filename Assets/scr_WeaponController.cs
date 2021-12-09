@@ -74,7 +74,6 @@ public class scr_WeaponController : MonoBehaviour
         SetWeaponAnimations();
         CalculateWeaponSway();
         CalculateAimingIn();
-        Shoot();
     }
 
     private void CalculateAimingIn()
@@ -143,13 +142,4 @@ public class scr_WeaponController : MonoBehaviour
     {
         return new Vector3(Mathf.Sin(Time), A * Mathf.Sin(B * Time + Mathf.PI));
     }
-
-    private void Shoot()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            weaponAnimator.SetTrigger("Shoot");
-        }
-    }
-
 }

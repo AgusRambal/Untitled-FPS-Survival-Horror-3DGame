@@ -28,16 +28,17 @@ public class GrabShells : MonoBehaviour
             Aim.SetActive(false);
         }
 
-        //If de Apretar para agarrar
-
-        /* if(TheDistance <=3)
-         * {
-         *      this.GetComponent<BoxCollider>().enabled = false;
-         *      ActionDisplay.SetActive(false);
-         *      ActionText.SetActive(false);
-         *      Aim.SetActive(false);
-         *      GrabbingShells.Play();
-         * } */
+        if (Input.GetButtonDown("Action")) 
+        {
+            if (TheDistance <= 3)
+            {
+                this.GetComponent<BoxCollider>().enabled = false;
+                ActionDisplay.SetActive(false);
+                ActionText.SetActive(false);
+                Aim.SetActive(false);
+                GrabbingShells.Play();
+            }
+        }
     }
 
     void OnMouseExit()
