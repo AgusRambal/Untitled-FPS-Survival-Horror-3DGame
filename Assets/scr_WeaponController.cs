@@ -10,6 +10,8 @@ public class scr_WeaponController : MonoBehaviour
     [Header("References")]
     public Animator weaponAnimator;
 
+    public GameObject aim;
+
 
     [Header("Settings")]
     public WeaponsSettingsModel settings;
@@ -72,7 +74,7 @@ public class scr_WeaponController : MonoBehaviour
         SetWeaponAnimations();
         CalculateWeaponSway();
         CalculateAimingIn();
-
+        Shoot();
     }
 
     private void CalculateAimingIn()
@@ -82,8 +84,13 @@ public class scr_WeaponController : MonoBehaviour
         if (isAimingIn)
         {
             targetPosition = characterController.cameraHolder.transform.position + (weaponSwayObject.transform.position - sightTarget.position) + (characterController.cameraHolder.transform.forward * sightOffset);
-        }
+            aim.SetActive(false);
 
+        }
+        else 
+        {
+            aim.SetActive(true);
+        }
         weaponsSwayPosition = weaponSwayObject.transform.position;
         weaponsSwayPosition = Vector3.SmoothDamp(weaponsSwayPosition, targetPosition, ref weaponsSwayPositionVelocity, aimingInTime);
         weaponSwayObject.transform.position = weaponsSwayPosition;
@@ -135,6 +142,14 @@ public class scr_WeaponController : MonoBehaviour
     private Vector3 LissajousCurve(float Time, float A, float B)
     {
         return new Vector3(Mathf.Sin(Time), A * Mathf.Sin(B * Time + Mathf.PI));
+    }
+
+    private void Shoot()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            weaponAnimator.SetTrigger("Shoot");
+        }
     }
 
 }
