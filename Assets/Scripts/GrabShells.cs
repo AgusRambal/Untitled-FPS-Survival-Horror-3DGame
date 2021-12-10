@@ -22,7 +22,7 @@ public class GrabShells : MonoBehaviour
 
     void OnMouseOver()
     {
-        if (TheDistance  <= 100)
+        if (TheDistance  <= 50)
         {
 
             ActionDisplay.SetActive(true);
@@ -32,7 +32,7 @@ public class GrabShells : MonoBehaviour
 
         if (Input.GetButtonDown("Action")) 
         {
-            if (TheDistance <= 100)
+            if (TheDistance <= 50)
             {
                 isLoaded = true;
                 Shells.SetActive(false);

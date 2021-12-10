@@ -8,6 +8,7 @@ public class EnemyAI : MonoBehaviour
     public GameObject stalkerDest;
     NavMeshAgent agent;
 
+
     private void Start()
     {
         agent = GetComponent<NavMeshAgent>();

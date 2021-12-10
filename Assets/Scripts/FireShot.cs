@@ -16,7 +16,9 @@ public class FireShot : MonoBehaviour
     public float disparos = 2;
     public GrabShells grabShells;
     public AudioSource empty;
-    
+    public float TargetDistance;
+    public int DamageAmount = 10;
+
     void Update()
     {
         if (Input.GetButtonDown("Fire1"))
@@ -25,12 +27,6 @@ public class FireShot : MonoBehaviour
             {
                 StartCoroutine(FiringShotgun());
             }
-
-            if (grabShells.isLoaded == false)
-            {
-                empty.Play();
-            }
-
         }
     }
 
@@ -44,10 +40,14 @@ public class FireShot : MonoBehaviour
             MuzzleFlash.GetComponent<Animation>().Play("MuzzleAnim");
             disparos--;
             balas.text = disparos.ToString();
-            //HAY QUE PONER IF DE QUE PASA SI NO TENGO BALAS
             ShotgunShot.Play();
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1f);
             isFiring = false;
+        }
+
+        else
+        {
+            empty.Play();
         }
     }
 }

@@ -91,8 +91,19 @@ public class Scr_CharacterController : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
     private void Update()
     {
+        if (Input.GetKeyDown("escape"))
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+
+
         CalculateView();
         CalculateMovement();
         CalculateJump();
