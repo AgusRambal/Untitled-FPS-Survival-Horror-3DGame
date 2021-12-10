@@ -19,7 +19,6 @@ public class GrabShells : MonoBehaviour
 
     void OnMouseOver()
     {
-        Debug.Log("dale");
         if (TheDistance  <= 100)
         {
 
