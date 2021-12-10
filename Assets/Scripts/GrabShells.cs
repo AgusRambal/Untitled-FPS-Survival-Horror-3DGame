@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GrabShells : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class GrabShells : MonoBehaviour
     public GameObject Shells;
     public GameObject Aim;
     public AudioSource GrabbingShells;
+    public TextMeshProUGUI balas;
+    public bool isLoaded = false;
 
      void Update()
     {
@@ -29,13 +32,16 @@ public class GrabShells : MonoBehaviour
 
         if (Input.GetButtonDown("Action")) 
         {
-            if (TheDistance <= 3)
+            if (TheDistance <= 100)
             {
-                this.GetComponent<BoxCollider>().enabled = false;
+                isLoaded = true;
+                Shells.SetActive(false);
                 ActionDisplay.SetActive(false);
                 ActionText.SetActive(false);
-                Aim.SetActive(false);
+                Aim.SetActive(true);
                 GrabbingShells.Play();
+                Destroy(Shells);
+                balas.text = 2.ToString();
             }
         }
     }

@@ -17,7 +17,6 @@ public class Scr_CharacterController : MonoBehaviour
     [Header("References")]
     public Transform cameraHolder;
     public Transform feetTransform;
-    public AudioSource footSteps;
 
     [Header("Settings")]
     public Scr_Models.PlayerSettingsModel playerSettings;
