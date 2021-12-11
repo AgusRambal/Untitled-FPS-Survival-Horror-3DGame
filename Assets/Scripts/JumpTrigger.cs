@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.SceneManagement;
+
 
 public class JumpTrigger : MonoBehaviour
 {
@@ -27,8 +30,7 @@ public class JumpTrigger : MonoBehaviour
 
     IEnumerator GameOver()
     {
-        yield return new WaitForSeconds(2.5f);
-        jumpCam.SetActive(false);
-        //mostrar el game over
+        yield return new WaitForSeconds(3f);
+        SceneManager.LoadScene(1);
     }
 }
