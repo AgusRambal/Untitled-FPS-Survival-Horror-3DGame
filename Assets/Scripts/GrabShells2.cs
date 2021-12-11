@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class GrabShells : MonoBehaviour
+public class GrabShells2 : MonoBehaviour
 {
     public float TheDistance;
     public GameObject ActionDisplay;
@@ -12,30 +12,30 @@ public class GrabShells : MonoBehaviour
     public GameObject Shells;
     public GameObject Aim;
     public AudioSource GrabbingShells;
-    public bool isLoaded = false;
-    public bool Taken = false;
+    public bool isLoaded2 = false;
+    public bool Taken2 = false;
 
-     void Update()
+    void Update()
     {
         TheDistance = PlayerCasting.DistanceFromTarget;
     }
 
     void OnMouseOver()
     {
-        if (TheDistance  <= 10)
+        if (TheDistance <= 10)
         {
             ActionDisplay.SetActive(true);
             ActionText.SetActive(true);
             Aim.SetActive(false);
         }
 
-        if (Input.GetButtonDown("Action")) 
+        if (Input.GetButtonDown("Action"))
         {
             if (TheDistance <= 10)
             {
-                Taken = true;
+                Taken2 = true;
                 GrabbingShells.Play();
-                isLoaded = true;
+                isLoaded2 = true;
                 Shells.SetActive(false);
                 ActionDisplay.SetActive(false);
                 ActionText.SetActive(false);

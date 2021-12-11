@@ -31,6 +31,6 @@ public class JumpTrigger : MonoBehaviour
     IEnumerator GameOver()
     {
         yield return new WaitForSeconds(3f);
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
     }
 }

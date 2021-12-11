@@ -4,21 +4,17 @@ using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
-    public int enemyHealth = 20;
+    public float enemyHealth = 20f;
+
     public GameObject enemy;
 
-    /*public void Damage(int DamageAmount)
+    public void TakeDamage(float amount)
     {
-        enemyHealth -= DamageAmount;
-    }*/
+        enemyHealth -= amount;
 
-    void Update()
-    {
-        if (enemyHealth <= 0 )
+        if (enemyHealth <= 0)
         {
-            Destroy(enemy);
+            Destroy(gameObject);
         }
-    }
-
-    
+    }    
 }

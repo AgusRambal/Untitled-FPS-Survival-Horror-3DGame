@@ -123,22 +123,21 @@ public class Scr_CharacterController : MonoBehaviour
                 pasos.Play();
                 Hactivo = true;
             }
-           
         }
             
-
         if (Input.GetButtonDown("Vertical"))
         {
             if (Hactivo == false) 
             { 
                 pasos.Play();
                 Vactivo = true;
-            }
-           
+            }   
         }
 
         if (Input.GetButtonUp("Horizontal"))
         {
+            Hactivo = false;
+
             if (Vactivo == false)
             { 
                 pasos.Stop(); 
@@ -147,6 +146,8 @@ public class Scr_CharacterController : MonoBehaviour
 
         if (Input.GetButtonUp("Vertical"))
         {
+            Vactivo = false;
+
             if (Hactivo == false)
             { 
                 pasos.Stop(); 
@@ -156,6 +157,11 @@ public class Scr_CharacterController : MonoBehaviour
         if (isSprinting == false) 
         {
             pasosRapidos.Stop();
+        }
+
+        if (isSprinting == true)
+        {
+            pasos.Stop();
         }
 
         CalculateView();
