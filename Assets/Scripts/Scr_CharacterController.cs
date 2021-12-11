@@ -18,6 +18,14 @@ public class Scr_CharacterController : MonoBehaviour
     public Transform cameraHolder;
     public Transform feetTransform;
 
+    [Header("Other")]
+    public AudioSource pasos;
+    public AudioSource pasosRapidos;
+    private bool Hactivo;
+    private bool Vactivo;
+    public GameObject linterna;
+    public bool isOn = true;
+
     [Header("Settings")]
     public Scr_Models.PlayerSettingsModel playerSettings;
     public float viewClampYMin;
@@ -103,6 +111,52 @@ public class Scr_CharacterController : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
         }
 
+        if (Input.GetButtonDown("Flaslight"))
+        {
+            LinteraOnOff();
+        }
+
+        if (Input.GetButtonDown("Horizontal")) 
+        {
+            if (Vactivo == false)
+            {
+                pasos.Play();
+                Hactivo = true;
+            }
+           
+        }
+            
+
+        if (Input.GetButtonDown("Vertical"))
+        {
+            if (Hactivo == false) 
+            { 
+                pasos.Play();
+                Vactivo = true;
+            }
+           
+        }
+
+        if (Input.GetButtonUp("Horizontal"))
+        {
+            if (Vactivo == false)
+            { 
+                pasos.Stop(); 
+            }
+        }
+
+        if (Input.GetButtonUp("Vertical"))
+        {
+            if (Hactivo == false)
+            { 
+                pasos.Stop(); 
+            }
+        }
+
+        if (isSprinting == false) 
+        {
+            pasosRapidos.Stop();
+        }
 
         CalculateView();
         CalculateMovement();
@@ -231,7 +285,7 @@ public class Scr_CharacterController : MonoBehaviour
             return;
         }
 
-        jumpingForce = Vector3.up * playerSettings.JumpingHeight;
+        jumpingForce = Vector3.up * playerSettings.JumpingHeight; 
         playerGravity = 0;
     }
 
@@ -278,13 +332,15 @@ public class Scr_CharacterController : MonoBehaviour
         }
 
         isSprinting = !isSprinting;
+        pasos.Stop();
+        pasosRapidos.Play();
     }
 
     private void StopSprint()
     {
         if (playerSettings.sprintingHold) 
         {
-             isSprinting = false;
+            isSprinting = false;
         } 
     }
 
@@ -307,5 +363,20 @@ public class Scr_CharacterController : MonoBehaviour
 
         currentWeapon.isAimingIn = isAimingIn;
 
+    }
+
+    private void LinteraOnOff()
+    {
+        if (isOn == false)
+        {
+            linterna.SetActive(true);
+            isOn = true;
+        }
+
+        else if(isOn == true)
+        {
+            linterna.SetActive(false);
+            isOn = false;
+        }
     }
 }

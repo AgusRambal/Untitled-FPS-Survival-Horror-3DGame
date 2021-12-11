@@ -24,7 +24,6 @@ public class GrabShells : MonoBehaviour
     {
         if (TheDistance  <= 50)
         {
-
             ActionDisplay.SetActive(true);
             ActionText.SetActive(true);
             Aim.SetActive(false);
@@ -34,12 +33,12 @@ public class GrabShells : MonoBehaviour
         {
             if (TheDistance <= 50)
             {
+                GrabbingShells.Play();
                 isLoaded = true;
                 Shells.SetActive(false);
                 ActionDisplay.SetActive(false);
                 ActionText.SetActive(false);
                 Aim.SetActive(true);
-                GrabbingShells.Play();
                 Destroy(Shells);
                 balas.text = 2.ToString();
             }
