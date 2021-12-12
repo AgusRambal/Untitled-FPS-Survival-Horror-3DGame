@@ -12,6 +12,7 @@ public class GrabShells : MonoBehaviour
     public GameObject Shells;
     public GameObject Aim;
     public AudioSource GrabbingShells;
+    public AudioSource Dialogue2;
     public bool isLoaded = false;
     public bool Taken = false;
 
@@ -22,7 +23,7 @@ public class GrabShells : MonoBehaviour
 
     void OnMouseOver()
     {
-        if (TheDistance  <= 10)
+        if (TheDistance  <= 3)
         {
             ActionDisplay.SetActive(true);
             ActionText.SetActive(true);
@@ -31,10 +32,11 @@ public class GrabShells : MonoBehaviour
 
         if (Input.GetButtonDown("Action")) 
         {
-            if (TheDistance <= 10)
+            if (TheDistance <= 3)
             {
                 Taken = true;
                 GrabbingShells.Play();
+                Dialogue2.Play();
                 isLoaded = true;
                 Shells.SetActive(false);
                 ActionDisplay.SetActive(false);

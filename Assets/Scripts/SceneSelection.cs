@@ -17,6 +17,7 @@ public class SceneSelection : MonoBehaviour
     public GameObject loadText;
     public GameObject loadFakeText;
     public AudioSource menuMusic;
+    public bool listo = false;
 
     public void NewGame()
     {
@@ -71,6 +72,14 @@ public class SceneSelection : MonoBehaviour
         yield return new WaitForSeconds(3);
         loadText.SetActive(true);
         menuMusic.Stop();
-        SceneManager.LoadScene(1);
+        listo = true;
+    }
+
+    private void Update()
+    {
+        if (listo == true)
+        {
+            SceneManager.LoadScene(1);
+        }
     }
 }

@@ -40,7 +40,7 @@ public class FireShot : MonoBehaviour
             balas.text = disparos.ToString();
         }
 
-         if (grabShells2.Taken2 == true)
+        if (grabShells2.Taken2 == true)
         {
             disparos = disparos + 2;
             grabShells2.Taken2 = false;

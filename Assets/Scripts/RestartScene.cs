@@ -18,4 +18,10 @@ public class RestartScene : MonoBehaviour
         buttonSound.Play();
         //Time.timeScale = 1f;
     }
+
+    public void Menu()
+    {
+        SceneManager.LoadScene(0);
+        buttonSound.Play();
+    }
 }

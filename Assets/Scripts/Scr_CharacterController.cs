@@ -25,6 +25,9 @@ public class Scr_CharacterController : MonoBehaviour
     private bool Vactivo;
     public GameObject linterna;
     public bool isOn = true;
+    public AudioSource linteraOn;
+    public AudioSource linternaOff;
+    public GameObject Fadein;
 
     [Header("Settings")]
     public Scr_Models.PlayerSettingsModel playerSettings;
@@ -101,6 +104,7 @@ public class Scr_CharacterController : MonoBehaviour
 
     private void Start()
     {
+        Fadein.SetActive(true);
         Cursor.lockState = CursorLockMode.Locked;
     }
 
@@ -377,12 +381,14 @@ public class Scr_CharacterController : MonoBehaviour
         {
             linterna.SetActive(true);
             isOn = true;
+            linteraOn.Play();
         }
 
         else if(isOn == true)
         {
             linterna.SetActive(false);
             isOn = false;
+            linternaOff.Play();
         }
     }
 }
